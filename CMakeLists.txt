@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.0.2)
+
+PROJECT("TableObjects")
+set(CMAKE_CXX_STANDARD 11)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Builds/$<CONFIG>/${CMAKE_VS_PLATFORM_NAME})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Builds/$<CONFIG>/${CMAKE_VS_PLATFORM_NAME})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Builds/$<CONFIG>/${CMAKE_VS_PLATFORM_NAME})
+
+find_package(Qt5 REQUIRED COMPONENTS Gui Widgets)
+
+add_definitions(-DPROJECT_NAME="${PROJECT_NAME}")
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h)
+
+qt5_wrap_cpp(MOC_FILES ${HEADERS} )
+
+if(MSVC)   
+  add_definitions(-DWIN32_LEAN_AND_MEAN)
+  add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src FILES ${HEADERS} ${SOURCES})
+endif()
+
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Gui)
