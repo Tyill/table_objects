@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <QtWidgets/QMainWindow>
+#include <QWidget>
 
 class TableWidget;
 
-class CentralWidget : public QMainWindow{
+class CentralWidget : public QWidget{
     Q_OBJECT
 
 public:

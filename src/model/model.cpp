@@ -42,10 +42,14 @@ int Model::columnCount(const QModelIndex& parent) const
 QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Vertical) {
-        return{};
+        if (role == Qt::DisplayRole) {
+            return (0 <= section) && (section < rowCount()) ? *(m_dataKeys.begin() + section) : QVariant();
+        }
     }
-    if (role == Qt::DisplayRole) {
-        return (0 <= section) && (section < columnCount()) ? (m_objects.begin() + section)->name : QVariant();
+    else {
+        if (role == Qt::DisplayRole) {
+            return (0 <= section) && (section < columnCount()) ? (m_objects.begin() + section)->name : QVariant();
+        }
     }
     return{};
 }
@@ -55,11 +59,93 @@ QVariant Model::data(const QModelIndex& index, int role) const
     if (!index.isValid()) {
         return QVariant();
     }
-       
-    const QString& key = *(m_dataKeys.begin() + index.row());
-
+      
     if (role == Qt::DisplayRole) {
-        return (m_objects.begin() + index.column())->data[key];
+
+        int row = index.row();
+        if ((0 > row) || (row >= rowCount())) {
+            return QVariant();
+        }
+
+        const QString& key = *(m_dataKeys.begin() + row);
+
+        int col = index.column();
+        if ((0 > col) || (col >= columnCount())) {
+            return QVariant();
+        }
+
+        auto obj = m_objects.begin() + col;
+        return obj->data.contains(key) ? (m_objects.begin() + col)->data[key] : QVariant();
     }
     return QVariant();
+}
+
+bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
+{   
+    if (role != Qt::EditRole) {
+        return QAbstractTableModel::setData(index, value, role);
+    }
+
+    int row = index.row();
+    if ((0 > row) || (row >= rowCount())) {
+        return false;
+    }
+
+    const QString& key = *(m_dataKeys.begin() + row);
+
+    int col = index.column();
+    if ((0 > col) || (col >= columnCount())) {
+        return false;
+    }
+        
+    auto text = value.toString();
+
+    auto obj = m_objects.begin() + col;
+
+    bool ok = false;
+
+    if (obj->data.contains(key)) {           // такой ключ есть, проверяем подходит ли значение
+        switch (obj->data[key].type()){
+        case QVariant::Type::Bool: 
+            if ((text == "true") || (text == "false")) {
+                obj->data[key] = text == "true";
+                ok = true;
+            }
+            break;
+        case QVariant::Type::Int: {
+            bool isInt = false;
+            int vint = text.toInt(&isInt);
+            if (isInt) {
+                obj->data[key] = vint;
+                ok = true;
+            }
+            break;
+        }
+        case QVariant::Type::String:
+            obj->data[key] = text;
+            ok = true;
+            break;
+        default:
+            break;
+        }              
+    }
+    else if (!value.toString().isEmpty()) {  // такого ключа нет - добавляем с учетом типа
+        if ((text == "true") || (text == "false")) {
+            obj->data[key] = text == "true";
+            ok = true;
+        }
+        else {
+            bool isInt = false;
+            int vint = text.toInt(&isInt);
+            if (isInt) {
+                obj->data[key] = vint;
+            }
+            else {
+                obj->data[key] = text;
+            }
+            ok = true;
+        }
+    }
+    
+    return ok;
 }

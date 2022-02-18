@@ -17,34 +17,14 @@ TableWidget::TableWidget(QWidget* parent) :
         
     m_tableView = new QTableView(this);
     m_tableView->setObjectName("TableView");
+    m_tableView->verticalHeader()->setVisible(true);
 
     mainLayout->addWidget(m_tableView, 1);
 }
 
 void TableWidget::setModel(QAbstractTableModel* model)
-{      
-    auto view = m_tableView;
-    
-    view->setModel(model);
-
-    ///////////////////////////////////////////////////////////////////
-
-    connect(model, &QAbstractItemModel::rowsInserted,
-        this, [view, model, this](const QModelIndex&, int first, int last) {
-        /* if (m_d->m_autoResizeColumns) {
-             view->resizeColumnsToContents();
-             updateHeader();
-         }*/
-    });
-    connect(model, &QAbstractItemModel::dataChanged,
-        this, [view, model, this](const QModelIndex& torLeft, const QModelIndex& rightBotton, const QVector<int>& roles) {
-        //if (m_d->m_autoResizeColumns && (roles.size() > 1)) {  // обновляем размеры, только если прошлая станция изменилась
-        //    view->resizeColumnsToContents();
-        //    updateHeader();
-        //}
-        //view->update();
-    });   
-    
-    view->resizeColumnsToContents();
- //   updateHeader();
-}
+{   
+    m_tableView->setModel(model);
+            
+    m_tableView->resizeColumnsToContents();
+ }
