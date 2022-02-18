@@ -74,7 +74,7 @@ QVariant Model::data(const QModelIndex& index, int role) const
         }
 
         auto obj = m_objects.begin() + col;
-        return obj->data.contains(key) ? (m_objects.begin() + col)->data[key] : QVariant();
+        return obj->data.contains(key) ? obj->data[key] : QVariant();
     }
     return QVariant();
 }
