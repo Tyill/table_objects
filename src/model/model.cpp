@@ -1,6 +1,5 @@
 #include "model.h"
 
-#include <QSet>
 
 Model::Model(QObject* parent):
     QAbstractTableModel(parent)

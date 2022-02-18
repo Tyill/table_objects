@@ -1,6 +1,5 @@
 #include "gui/central_widget.h"
 #include "logic/logic.h"
-#include "model/model.h"
 
 #include <QApplication>
 #include <QDebug>
