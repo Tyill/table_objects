@@ -112,11 +112,11 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
                 ok = true;
             }
             break;
-        case QVariant::Type::Int: {
-            bool isInt = false;
-            int vint = text.toInt(&isInt);
-            if (isInt) {
-                obj->data[key] = vint;
+        case QVariant::Type::Double: {
+            bool isDbl = false;
+            double val = text.toDouble(&isDbl);
+            if (isDbl) {
+                obj->data[key] = val;
                 ok = true;
             }
             break;
@@ -135,10 +135,10 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
             ok = true;
         }
         else {
-            bool isInt = false;
-            int vint = text.toInt(&isInt);
-            if (isInt) {
-                obj->data[key] = vint;
+            bool isDbl = false;
+            double val = text.toDouble(&isDbl);
+            if (isDbl) {
+                obj->data[key] = val;
             }
             else {
                 obj->data[key] = text;

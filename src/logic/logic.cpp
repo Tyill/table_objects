@@ -10,7 +10,7 @@ Logic::Logic(CentralWidget* centralWidget, QObject* parent) :
     m_model(new Model(this))
 {     
     Object obj1("obj1", { { "key1", QVariant(true) },
-                          { "key2", QVariant(123)  },
+                          { "key2", QVariant(123.3)  },
                           { "key3", QVariant("str") }, });
     m_model->addObject(obj1);
 
@@ -20,7 +20,7 @@ Logic::Logic(CentralWidget* centralWidget, QObject* parent) :
     m_model->addObject(obj2);
 
     Object obj3("obj3", { { "key6", QVariant() },
-                          { "key7", QVariant(123) },
+                          { "key7", QVariant(123.2) },
                           { "key2", QVariant() }, });
     m_model->addObject(obj3);
   
