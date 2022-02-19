@@ -103,7 +103,7 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
 
     bool ok = false;
 
-    if (obj->data.contains(key)) {           // такой ключ есть, проверяем подходит ли значение
+    if (obj->data.contains(key) && obj->data[key].isValid()) {  // такой ключ есть и значение установлено, проверяем подходит ли значение
         switch (obj->data[key].type()){
         case QVariant::Type::Bool: 
             if ((text == "true") || (text == "false")) {
